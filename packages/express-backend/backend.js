@@ -74,13 +74,13 @@ app.listen(port, () => {
     );
   });
 
-
-
+  
+// Test endpoint
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-  
+// Get all users (potentially with a filter on name or job)
 app.get("/users", (req, res) => {
     const name = req.query.name;  
     const job = req.query.job;  
@@ -109,6 +109,7 @@ app.get("/users/:id", (req, res) => {
     }
   });
 
+// Create new user (with error handling)
 app.post("/users", (req, res) => {
     const userToAdd = req.body;  
     if (!userToAdd.id || !userToAdd.name || !userToAdd.job) {  
@@ -118,6 +119,7 @@ app.post("/users", (req, res) => {
         res.send(`User added successfully: ${userToAdd.name}`);
        }}); 
   
+// Delete indiv. user
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"]; //or req.params.id
     let result = deleteUser(id);
