@@ -34,11 +34,6 @@ const users = {
 const app = express();
 const port = 8000;
 
-const findUserByName = (name) => {
-    return users["users_list"].filter(
-      (user) => user["name"] === name
-    );
-  };
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
@@ -58,7 +53,28 @@ if (index !== -1) {
 }  
 };
 
+const findUserByName = (name) => {
+    return users["users_list"].filter(
+      (user) => user["name"] === name
+    );
+  };
+
+const findUserByJob = (job) => {
+    return users["users_list"].filter(
+        (user) => user["job"] === job
+    );
+    
+};
+
 app.use(express.json());
+
+app.listen(port, () => {
+    console.log(
+      `Example app listening at http://localhost:${port}`
+    );
+  });
+
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -66,16 +82,23 @@ app.get("/", (req, res) => {
 
   
 app.get("/users", (req, res) => {
-const name = req.query.name;
-if (name != undefined) {
-    let result = findUserByName(name);
-    result = { users_list: result };
-    res.send(result);
-} else {
-    res.send(users);
-}
-});
+    const name = req.query.name;  
+    const job = req.query.job;  
+    
+    if (name !== undefined) {  
+     let result = findUserByName(name);  
+     result = { users_list: result };  
+     res.send(result);  
+    } else if (job !== undefined) {  
+     let result = findUserByJob(job);  
+     result = { users_list: result };  
+     res.send(result);  
+    } else {  
+     res.send(users);  
+    }  
+  });
 
+// Get individual user
 app.get("/users/:id", (req, res) => {
     const id = req.params["id"]; //or req.params.id
     let result = findUserById(id);
@@ -86,18 +109,14 @@ app.get("/users/:id", (req, res) => {
     }
   });
 
-app.listen(port, () => {
-  console.log(
-    `Example app listening at http://localhost:${port}`
-  );
-});
-
-
 app.post("/users", (req, res) => {
-    const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
-  });
+    const userToAdd = req.body;  
+    if (!userToAdd.id || !userToAdd.name || !userToAdd.job) {  
+        res.status(400).send("Invalid user data. Please provide id, name, and job.");  
+       } else {  
+        addUser(userToAdd);  
+        res.send(`User added successfully: ${userToAdd.name}`);
+       }}); 
   
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"]; //or req.params.id
@@ -108,3 +127,4 @@ app.delete("/users/:id", (req, res) => {
         res.send(result);
     };
 });
+
