@@ -48,6 +48,15 @@ const addUser = (user) => {
     return user;
   };
 
+const deleteUser = (id) => {  
+const index = users["users_list"].findIndex((user) => user["id"] === id);  
+if (index !== -1) {  
+    users["users_list"].splice(index, 1);  
+    return id;  
+} else {  
+    return undefined;  
+}  
+};
 
 app.use(express.json());
 
@@ -90,3 +99,12 @@ app.post("/users", (req, res) => {
     res.send();
   });
   
+app.delete("/users/:id", (req, res) => {
+    const id = req.params["id"]; //or req.params.id
+    let result = deleteUser(id);
+    if (result === undefined) {
+      res.status(404).send("Resource not found.");
+    } else {
+        res.send(result);
+    };
+});
