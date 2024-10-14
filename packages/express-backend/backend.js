@@ -114,7 +114,7 @@ app.get("/users/:id", (req, res) => {
 // Create new user (with error handling)
 app.post("/users", (req, res) => {
     const userToAdd = req.body;  
-    if (!userToAdd.id || !userToAdd.name || !userToAdd.job) {  
+    if (!userToAdd.name || !userToAdd.job) {  
         res.status(400).send("Invalid user data. Please provide id, name, and job.");  
        } else {  
         addUser(userToAdd);  
