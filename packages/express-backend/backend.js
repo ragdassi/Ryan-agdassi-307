@@ -117,8 +117,8 @@ app.post("/users", (req, res) => {
     if (!userToAdd.name || !userToAdd.job) {  
         res.status(400).send("Invalid user data. Please provide id, name, and job.");  
        } else {  
-        addUser(userToAdd);  
-        res.send(`User added successfully: ${userToAdd.name}`);
+        const user = addUser(userToAdd)
+        res.status(201).send(user)
        }}); 
   
 // Delete indiv. user
