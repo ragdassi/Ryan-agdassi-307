@@ -22,35 +22,51 @@ function MyApp() {
       }, []);
 
     function postUser(person) {
-    const promise = fetch("http://localhost:8000/users", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify(person)
-    });
-    
-    return promise;
+        const promise = fetch("http://localhost:8000/users", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify(person)
+        });
+        
+        return promise;
     }
 
     function updateList(person) {
         postUser(person)
+          .then((response) => response.json()) 
           .then(() => setCharacters([...characters, person]))
           .catch((error) => {
             console.log(error);
           });
       }
     
-
-
-    // After here, updates to table handled by removeChar, updateList 
-    // We handled the Promise above to fetchUsers to make the table
-
-    function removeOneCharacter(index) {
-        const updated = characters.filter((character, i) => {
-            return i !== index;
+    function deleteUser(person) {
+        const promise = fetch(`http://localhost:8000/users/${person.id}`, {
+            method: "DELETE",
+            headers: {
+            "Content-Type": "application/json"
+            },
         });
-        setCharacters(updated);
+        return promise;
+    }
+
+    function removeOneCharacter(person) {
+        console.log("Deleting user with ID:", person.id); // Log to verify ID is correct
+    
+        deleteUser(person)
+            .then((response) => {
+                if (response.ok) {
+                    const updated = characters.filter((character) => character.id !== person.id);
+                    setCharacters(updated);
+                } else {
+                    console.log("Failed to delete the user.");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
         }
 
 
