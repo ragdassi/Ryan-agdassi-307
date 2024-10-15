@@ -67,6 +67,10 @@ const findUserByJob = (job) => {
     
 };
 
+const generateID = () => {
+  return 'id' + Math.random().toString(36).substring(2, 8) + Date.now().toString(36);
+};
+
 app.use(cors());
 app.use(express.json());
 
@@ -111,12 +115,14 @@ app.get("/users/:id", (req, res) => {
     }
   });
 
-// Create new user (with error handling)
+// Create new user (with error handling
+
 app.post("/users", (req, res) => {
     const userToAdd = req.body;  
     if (!userToAdd.name || !userToAdd.job) {  
         res.status(400).send("Invalid user data. Please provide id, name, and job.");  
        } else {  
+        userToAdd.id = generateID();
         const user = addUser(userToAdd)
         res.status(201).send(user)
        }}); 
