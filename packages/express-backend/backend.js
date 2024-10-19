@@ -107,7 +107,6 @@ app.post("/users", (req, res) => {
   }
 });
   
-// Delete indiv. user
 // Delete individual user by ID
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"];
