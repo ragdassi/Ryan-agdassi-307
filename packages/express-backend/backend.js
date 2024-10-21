@@ -26,44 +26,6 @@ app.listen(port, () => {
     );
   });
 
-
-const findUserById = (id) =>
-  users["users_list"].find((user) => user["id"] === id);
-
-const addUser = (user) => {
-    users["users_list"].push(user);
-    return user;
-  };
-
-const deleteUser = (id) => {  
-const index = users["users_list"].findIndex((user) => user["id"] === id);  
-if (index !== -1) {  
-    users["users_list"].splice(index, 1);  
-    return id;  
-} else {  
-    return undefined;  
-}  
-};
-
-const findUserByName = (name) => {
-    return users["users_list"].filter(
-      (user) => user["name"] === name
-    );
-  };
-
-const findUserByJob = (job) => {
-    return users["users_list"].filter(
-        (user) => user["job"] === job
-    );
-    
-};
-
-const generateID = () => {
-  return 'id' + Math.random().toString(36).substring(2, 8) + Date.now().toString(36);
-};
-
-
-
   
 // Test endpoint
 app.get("/", (req, res) => {
@@ -101,7 +63,7 @@ app.get("/users/:id", (req, res) => {
     });
 });
 
-// Create new user (with error handling
+// Create new user (with error handling)
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
 
@@ -120,20 +82,18 @@ app.post("/users", (req, res) => {
   
 // Delete individual user by ID
 app.delete("/users/:id", (req, res) => {
-    const id = req.params["id"];
-    
-    userService.findUserById(id)
-      .then(user => {
-        if (user === null) {
-          res.status(404).send("User not found.");
-        } else {
-          return userService.deleteUser(id);
-        }
-      })
-      .then(() => {
+  const id = req.params["id"]; // Ensure this is capturing the ID correctly
+
+  userService.deleteUserById(id)
+    .then(deletedUser => {
+      if (!deletedUser) {
+        res.status(404).send("User not found.");
+      } else {
         res.status(204).send();
-      })
-      .catch(error => {
-        res.status(500).send("Error deleting user");
-      });
+      }
+    })
+    .catch(error => {
+      console.error("Error deleting user:", error);
+      res.status(500).send("Error deleting user");
+    });
 });

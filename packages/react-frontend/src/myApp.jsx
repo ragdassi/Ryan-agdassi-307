@@ -43,7 +43,7 @@ function MyApp() {
       }
     
     function deleteUser(person) {
-        const promise = fetch(`http://localhost:8000/users/${person.id}`, {
+        const promise = fetch(`http://localhost:8000/users/${person._id}`, {
             method: "DELETE",
             headers: {
             "Content-Type": "application/json"
@@ -53,12 +53,12 @@ function MyApp() {
     }
 
     function removeOneCharacter(person) {
-        console.log("Deleting user with ID:", person.id); // Log to verify ID is correct
+        console.log("Deleting user with ID:", person._id); // Use _id here
     
         deleteUser(person)
             .then((response) => {
                 if (response.ok) {
-                    const updated = characters.filter((character) => character.id !== person.id);
+                    const updated = characters.filter((character) => character._id !== person._id); // Use _id here
                     setCharacters(updated);
                 } else {
                     console.log("Failed to delete the user.");
@@ -66,8 +66,10 @@ function MyApp() {
             })
             .catch((error) => {
                 console.log(error);
-            })
-        }
+            });
+    }
+    
+    
 
 
 

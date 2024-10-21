@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import userModel from "../models/user.js";
 
+mongoose.set("debug", true);
 
+// HERE
 function getUsers(name, job) {
   let promise;
   if (name === undefined && job === undefined) {
@@ -32,10 +34,10 @@ function findUserByJob(job) {
   return userModel.find({ job: job });
 }
 
-
 function deleteUserById(id) {
-    return userModel.findByIdAndDelete(id);
-}
+    return userModel.findByIdAndDelete(id).exec();
+  }
+  
 export default {
   addUser,
   getUsers,
